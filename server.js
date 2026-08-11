@@ -6,7 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 // Database connection
-const { testConnection } = require('./config/db');
+const { testConnection, db } = require('./config/db');
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -55,6 +55,16 @@ app.get('/profile', (req, res) => {
 // Root route
 app.get('/', (req, res) => {
   res.status(200).send('TaskMaster server is running');
+});
+
+// Health check: verifies the app and its database connection (Render health check)
+app.get('/api/health', async (req, res) => {
+  try {
+    await db.query('SELECT 1');
+    res.json({ ok: true, db: 'up' });
+  } catch (err) {
+    res.status(503).json({ ok: false, db: 'down', error: String(err.message) });
+  }
 });
 
 // Unknown API route -> clean JSON 404 (Phase 17)

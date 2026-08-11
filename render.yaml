@@ -7,7 +7,7 @@ services:
     region: oregon
     buildCommand: npm install
     startCommand: node server.js
-    healthCheckPath: /
+    healthCheckPath: /api/health
     envVars:
       - key: PORT
         value: 10000
