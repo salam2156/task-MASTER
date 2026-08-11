@@ -17,7 +17,7 @@ The project demonstrates a complete web development workflow, including:
 - Cloud deployment.
 
 The application is designed as a complete Full-Stack project suitable for a professional portfolio and internship submission.
-
+///
 ---
 
 2. Project Goals
@@ -35,7 +35,7 @@ The main goals of TaskMaster are:
 - Deploy the application online.
 
 ---
-
+/////
 3. Main Features
 
 🔐 Authentication
@@ -44,7 +44,7 @@ Users can:
 
 - Create a new account.
 - Log in.
-- Log out.
+- Log out. 
 - Manage their profile.
 - Access only their own tasks.
 
@@ -201,7 +201,7 @@ Development & Deployment
 - Render
 
 ---
-
+/////
 5. UI/UX Design
 
 The application follows a modern and clean dashboard style.
@@ -229,7 +229,7 @@ UI Characteristics
 - Clean dashboard layout.
 
 ---
-
+////
 6. Application Pages
 
 6.1 Home Page
@@ -335,7 +335,7 @@ Task Section
 Allows users to view and update their account information.
 
 ---
-
+///
 7. Project Structure
 
 my-task-manager/
@@ -411,7 +411,7 @@ JSON Response
 Update UI
 
 ---
-
+/////
 9. Backend Architecture
 
 The backend is built using Node.js + Express.js.
@@ -443,7 +443,7 @@ Database
 JSON Response
 
 ---
-
+/////
 10. REST API
 
 Authentication
@@ -537,7 +537,7 @@ PUT /api/notifications/:id
 Marks a notification as read.
 
 ---
-
+////
 11. Database Design
 
 The application uses a relational MySQL database.
@@ -548,7 +548,7 @@ users
 tasks
 categories
 notifications
-
+////
 ---
 
 12. Users Table
@@ -561,7 +561,7 @@ CREATE TABLE users (
     avatar VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+/////
 ---
 
 13. Categories Table
@@ -582,7 +582,7 @@ Example categories:
 - Study
 - Personal
 - Urgent
-
+/////
 ---
 
 14. Tasks Table
@@ -610,11 +610,11 @@ CREATE TABLE tasks (
     REFERENCES categories(id)
     ON DELETE SET NULL
 );
-
+/////
 ---
 
 15. Notifications Table
-[8/10/2026 4:30 PM] salam: CREATE TABLE notifications (
+ CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
@@ -626,7 +626,7 @@ CREATE TABLE tasks (
     REFERENCES users(id)
     ON DELETE CASCADE
 );
-
+///////
 ---
 
 16. Database Relationships
@@ -712,7 +712,7 @@ GROUP BY status;
 This demonstrates practical use of SQL and relational database concepts.
 
 ---
-
+//////
 18. Authentication & Security
 
 The application should protect user data.
@@ -741,7 +741,7 @@ User A
 Cannot access
   ↓
 User B's Tasks
-
+/////
 ---
 
 19. Environment Variables
@@ -758,7 +758,7 @@ DB_PASSWORD=your_password
 DB_NAME=task_manager
 
 The ".env" file must not be uploaded to GitHub.
-
+//////
 ---
 
 20. ".gitignore"
