@@ -1,0 +1,79 @@
+/* TaskMaster - Custom Styles */
+/* Works together with Tailwind CSS (CDN) */
+
+/* Smooth page load */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    /* Never allow horizontal scrolling (small screens) */
+    overflow-x: hidden;
+}
+
+/* Hide modal by default */
+.modal-overlay {
+    display: none;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+/* Small fade-in animation for modal */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-overlay.open .modal-card {
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Thin scrollbar for the task list */
+.task-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.dark .task-list::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+/* ---------- UI/UX polish (Phase 16) ---------- */
+
+/* Page scrollbars: neutral in light mode, slate in dark mode */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+/* Clear keyboard focus ring (accessibility) */
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Brand-colored text selection */
+::selection {
+    background: #2563eb;
+    color: #ffffff;
+}

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - TaskMaster</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%232563EB'/%3E%3Cpath d='M28 52l16 16 30-34' stroke='white' stroke-width='12' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <script>
+        // Apply dark mode before render (persistent preference, no flash)
+        (function () {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 min-h-screen flex">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="w-16 lg:w-64 bg-slate-900 text-white flex flex-col fixed inset-y-0 left-0 z-20">
+        <a href="/dashboard" class="flex items-center gap-3 px-4 lg:px-6 h-16 border-b border-slate-800">
+            <div class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600 shrink-0">
+                <i class="fas fa-check-double text-white text-sm"></i>
+            </div>
+            <span class="hidden lg:block font-bold text-lg">TaskMaster</span>
+        </a>
+
+        <nav class="flex-1 px-3 py-4 space-y-2">
+            <a href="/dashboard" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                <i class="fas fa-gauge-high w-5 text-center"></i>
+                <span class="hidden lg:inline">Dashboard</span>
+            </a>
+            <a href="/dashboard#tasks" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                <i class="fas fa-list-check w-5 text-center"></i>
+                <span class="hidden lg:inline">My Tasks</span>
+            </a>
+            <a href="/profile" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl bg-blue-600 text-white font-medium">
+                <i class="fas fa-user w-5 text-center"></i>
+                <span class="hidden lg:inline">Profile</span>
+            </a>
+        </nav>
+
+        <div class="p-3 border-t border-slate-800">
+            <button onclick="logout()" class="w-full flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-red-400 hover:bg-red-500/10 font-medium transition">
+                <i class="fas fa-right-from-bracket w-5 text-center"></i>
+                <span class="hidden lg:inline">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="flex-1 ml-16 lg:ml-64 flex flex-col min-h-screen">
+
+        <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+            <div class="flex items-center justify-between px-6 h-16">
+                <h1 class="font-bold text-slate-800 dark:text-slate-100 truncate">My Profile</h1>
+                <div class="flex items-center gap-3">
+                    <button id="themeBtn" onclick="toggleTheme()" title="Toggle dark mode" class="w-10 h-10 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="/dashboard" class="hidden sm:flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <img id="headerAvatar" src="/images/avatar.png" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-blue-100 object-cover">
+                </div>
+            </div>
+        </header>
+
+        <section class="flex-1 p-3 sm:p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-5xl">
+
+                <!-- ============ PROFILE INFO ============ -->
+                <div class="lg:col-span-3 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-8">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6"><i class="fas fa-user-pen text-blue-600 mr-2"></i>Account Information</h2>
+
+                    <div id="profileMessage" class="hidden mb-5 p-4 rounded-xl border text-sm dark:text-slate-100"></div>
+
+                    <form id="profileForm" novalidate>
+                        <div class="mb-5">
+                            <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Name</label>
+                            <input type="text" id="name" required
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                            <input type="email" id="email" required
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="avatar" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Profile Picture (image URL)</label>
+                            <div class="flex items-center gap-4">
+                                <img id="avatarPreview" src="/images/avatar.png" alt="Avatar preview"
+                                     class="w-16 h-16 rounded-full border-2 border-blue-100 object-cover shrink-0">
+                                <input type="url" id="avatar" placeholder="https://example.com/avatar.png"
+                                       class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                            </div>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">Leave empty to use the default avatar.</p>
+                        </div>
+
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Member since <span id="memberSince" class="font-semibold text-slate-500 dark:text-slate-400">-</span></p>
+
+                        <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition active:scale-[0.98]">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ============ CHANGE PASSWORD ============ -->
+                <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-8 h-fit">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6"><i class="fas fa-key text-blue-600 mr-2"></i>Change Password</h2>
+
+                    <div id="passwordMessage" class="hidden mb-5 p-4 rounded-xl border text-sm dark:text-slate-100"></div>
+
+                    <form id="passwordForm" novalidate>
+                        <div class="mb-5">
+                            <label for="currentPassword" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Current Password</label>
+                            <input type="password" id="currentPassword" required
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="newPassword" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">New Password</label>
+                            <input type="password" id="newPassword" required placeholder="At least 6 characters"
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="confirmPassword" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" required
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition">
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 rounded-xl transition active:scale-[0.98]">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        // TaskMaster - Profile page logic (Phase 13)
+
+        function showBox(el, text, isError) {
+            el.textContent = text;
+            el.classList.remove('hidden');
+            el.classList.remove('border-red-200', 'bg-red-50', 'text-red-700');
+            el.classList.remove('border-emerald-200', 'bg-emerald-50', 'text-emerald-700');
+            el.classList.add(isError
+                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400');
+        }
+
+        // Guard: not logged in -> login page
+        if (!localStorage.getItem('token') || !getCurrentUser()) {
+            window.location.href = '/login';
+        } else {
+            updateThemeIcon();
+            loadProfile();
+        }
+
+        // Load the real profile from the API and fill the form
+        async function loadProfile() {
+            try {
+                const profile = await apiRequest('/profile', 'GET');
+
+                document.getElementById('name').value = profile.name;
+                document.getElementById('email').value = profile.email;
+                document.getElementById('avatar').value = profile.avatar || '';
+                document.getElementById('avatarPreview').src = profile.avatar || '/images/avatar.png';
+                document.getElementById('headerAvatar').src = profile.avatar || '/images/avatar.png';
+                document.getElementById('memberSince').textContent =
+                    new Date(profile.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            } catch (error) {
+                showBox(document.getElementById('profileMessage'), error.message, true);
+            }
+        }
+
+        // Live avatar preview
+        document.getElementById('avatar').addEventListener('input', (event) => {
+            if (event.target.value.trim()) {
+                document.getElementById('avatarPreview').src = event.target.value.trim();
+            } else {
+                document.getElementById('avatarPreview').src = '/images/avatar.png';
+            }
+        });
+
+        // Update profile information
+        document.getElementById('profileForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const messageBox = document.getElementById('profileMessage');
+            const btn = event.target.querySelector('button');
+
+            if (!document.getElementById('name').value.trim() || !document.getElementById('email').value.trim()) {
+                showBox(messageBox, 'Name and email are required', true);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const data = await apiRequest('/profile', 'PUT', {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    avatar: document.getElementById('avatar').value.trim()
+                });
+                showBox(messageBox, data.message, false);
+                // Keep the session in sync (name/avatar in header)
+                const user = getCurrentUser();
+                setSession(localStorage.getItem('token'), { ...user, name: data.user.name, email: data.user.email, avatar: data.user.avatar });
+                document.getElementById('headerAvatar').src = data.user.avatar || '/images/avatar.png';
+            } catch (error) {
+                showBox(messageBox, error.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            }
+        });
+
+        // Change password
+        document.getElementById('passwordForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const messageBox = document.getElementById('passwordMessage');
+            const btn = event.target.querySelector('button');
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            if (newPass !== confirmPass) {
+                showBox(messageBox, 'New passwords do not match', true);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+
+            try {
+                const data = await apiRequest('/profile', 'PUT', {
+                    currentPassword: document.getElementById('currentPassword').value,
+                    newPassword: newPass
+                });
+                showBox(messageBox, data.message, false);
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } catch (error) {
+                showBox(messageBox, error.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update Password';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TaskMaster</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%232563EB'/%3E%3Cpath d='M28 52l16 16 30-34' stroke='white' stroke-width='12' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <script>
+        // Apply dark mode before render (persistent preference, no flash)
+        (function () {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 min-h-screen flex">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="w-16 lg:w-64 bg-slate-900 dark:bg-slate-900 text-white flex flex-col fixed inset-y-0 left-0 z-20">
+
+        <!-- Logo -->
+        <a href="/dashboard" class="flex items-center gap-3 px-4 lg:px-6 h-16 border-b border-slate-800">
+            <div class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600 shrink-0">
+                <i class="fas fa-check-double text-white text-sm"></i>
+            </div>
+            <span class="hidden lg:block font-bold text-lg">TaskMaster</span>
+        </a>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-4 space-y-2">
+            <a href="/dashboard" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl bg-blue-600 text-white font-medium">
+                <i class="fas fa-gauge-high w-5 text-center"></i>
+                <span class="hidden lg:inline">Dashboard</span>
+            </a>
+            <a href="/dashboard#tasks" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                <i class="fas fa-list-check w-5 text-center"></i>
+                <span class="hidden lg:inline">My Tasks</span>
+            </a>
+            <a href="/profile" class="flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                <i class="fas fa-user w-5 text-center"></i>
+                <span class="hidden lg:inline">Profile</span>
+            </a>
+        </nav>
+
+        <!-- Logout -->
+        <div class="p-3 border-t border-slate-800">
+            <button onclick="logout()" class="w-full flex items-center justify-center lg:justify-start gap-3 px-3 py-3 rounded-xl text-red-400 hover:bg-red-500/10 font-medium transition">
+                <i class="fas fa-right-from-bracket w-5 text-center"></i>
+                <span class="hidden lg:inline">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="flex-1 ml-16 lg:ml-64 flex flex-col min-h-screen">
+
+        <!-- Header -->
+        <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+            <div class="flex items-center justify-between px-6 h-16">
+
+                <!-- Welcome -->
+                <div>
+                    <h1 class="font-bold text-slate-800 dark:text-slate-100 truncate">Welcome back, <span id="userName">User</span></h1>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 hidden sm:block">Manage your daily tasks efficiently</p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <!-- Notifications dropdown -->
+                    <div class="relative">
+                        <button id="notifBtn" title="Notifications" class="relative w-10 h-10 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            <i class="fas fa-bell"></i>
+                            <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full items-center justify-center"></span>
+                        </button>
+
+                        <!-- Dropdown panel (filled by dashboard.js) -->
+                        <div id="notifPanel" class="hidden absolute right-0 mt-2 w-80 max-w-[calc(100vw-5.5rem)] bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-30 overflow-hidden">
+                            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                                <p class="font-bold text-slate-800 dark:text-slate-100 text-sm"><i class="fas fa-bell text-blue-600 mr-2"></i>Notifications</p>
+                                <button onclick="toggleNotifications()" class="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fas fa-xmark"></i></button>
+                            </div>
+                            <div id="notifList" class="max-h-80 overflow-y-auto">
+                                <div class="text-center py-8 text-slate-400 text-sm">
+                                    <i class="fas fa-spinner fa-spin text-xl mb-2"></i>
+                                    <p>Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Theme toggle -->
+                    <button id="themeBtn" onclick="toggleTheme(); refreshChartColors();" title="Toggle dark mode" class="w-10 h-10 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <!-- Avatar -->
+                    <img id="userAvatar" src="/images/avatar.png" alt="Avatar"
+                         class="w-10 h-10 rounded-full border-2 border-blue-100 dark:border-blue-900 object-cover">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <section id="tasks" class="flex-1 p-3 sm:p-6 space-y-6">
+
+            <!-- ============ STATISTICS (real data from /api/dashboard/stats) ============ -->
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="min-w-0">
+                        <p id="statTotal" class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none">0</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Total Tasks</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-check-circle"></i></div>
+                    <div class="min-w-0">
+                        <p id="statCompleted" class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none">0</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Completed</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-slate-500/10 text-slate-600 dark:text-slate-400 flex items-center justify-center shrink-0"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="min-w-0">
+                        <p id="statPending" class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none">0</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Pending</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0"><i class="fas fa-spinner"></i></div>
+                    <div class="min-w-0">
+                        <p id="statInProgress" class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none">0</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">In Progress</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-red-500/10 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="min-w-0">
+                        <p id="statOverdue" class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none">0</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Overdue</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-line"></i></div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-2xl font-bold text-slate-800 dark:text-slate-100 leading-none"><span id="statProgress">0</span>%</p>
+                        <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-2">
+                            <div id="progressBar" class="h-1.5 bg-blue-600 rounded-full transition-all duration-500" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ STATISTICS & CHARTS (real data from /api/dashboard/stats) ============ -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-bold text-slate-800 dark:text-slate-100"><i class="fas fa-chart-pie text-blue-600 mr-2"></i>Productivity Charts</h2>
+                    <p class="text-xs text-slate-400 dark:text-slate-500">Live from your tasks</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3 text-center">Task Status</p>
+                        <div class="h-48 flex items-center justify-center"><canvas id="statusChart"></canvas></div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3 text-center">Task Priority</p>
+                        <div class="h-48 flex items-center justify-center"><canvas id="priorityChart"></canvas></div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3 text-center">Completed vs Incomplete</p>
+                        <div class="h-48 flex items-center justify-center"><canvas id="completionChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page title + Add button -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">My Tasks</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400" id="taskCount">0 tasks</p>
+                </div>
+                <button onclick="openAddModal()"
+                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 dark:shadow-none transition active:scale-[0.98]">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6">
+
+                <div class="space-y-6 min-w-0">
+
+                    <!-- Search & Filters (real task data, client-side) -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                        <div class="relative md:col-span-2">
+                            <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input id="searchInput" type="text" placeholder="Search by title..."
+                                   class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                        </div>
+                        <select id="statusFilter" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="priorityFilter" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                            <option value="">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                        <select id="categoryFilter" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                            <option value="">All Categories</option>
+                            <!-- Options are built from the user's real categories -->
+                        </select>
+                        <div class="relative lg:col-span-1">
+                            <select id="sortFilter" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                                <option value="created_desc">Newest First</option>
+                                <option value="due_asc">Due Date (soonest)</option>
+                                <option value="due_desc">Due Date (latest)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Task list -->
+                    <div id="taskList" class="task-list space-y-3 max-h-none lg:max-h-[calc(100vh-320px)] overflow-y-auto pr-1">
+                        <!-- Tasks are rendered here by dashboard.js -->
+                        <div id="loadingState" class="text-center py-16 text-slate-400">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                            <p>Loading your tasks...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ CATEGORIES PANEL ============ -->
+                <aside class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 h-fit">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100"><i class="fas fa-tags text-blue-600 mr-2"></i>Categories</h3>
+                    </div>
+
+                    <!-- Create category -->
+                    <div class="flex gap-2 mb-4">
+                        <input id="categoryName" type="text" placeholder="New category..."
+                               class="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition text-sm">
+                        <button onclick="createCategory()" title="Add category"
+                                class="w-10 h-10 shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <p id="categoryError" class="hidden mb-3 text-xs text-red-600 dark:text-red-400"></p>
+
+                    <!-- Category list -->
+                    <ul id="categoryList" class="space-y-2">
+                        <li class="text-sm text-slate-400 text-center py-4">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ ADD / EDIT TASK MODAL ============ -->
+    <div id="taskModal" class="modal-overlay fixed inset-0 z-50 bg-slate-900/50 items-center justify-center p-4">
+        <div class="modal-card w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-5 sm:p-8 max-h-[90vh] overflow-y-auto">
+
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-800 dark:text-slate-100">Add New Task</h3>
+                <button onclick="closeModal()" class="w-9 h-9 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="taskForm" novalidate>
+                <input type="hidden" id="taskId">
+
+                <div class="mb-5">
+                    <label for="title" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Title *</label>
+                    <input type="text" id="title" placeholder="Task title"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                </div>
+
+                <div class="mb-5">
+                    <label for="description" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Description</label>
+                    <textarea id="description" rows="3" placeholder="Details about the task"
+                              class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Status</label>
+                        <select id="status"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="priority" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Priority</label>
+                        <select id="priority"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="dueDate" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Due Date</label>
+                        <input type="date" id="dueDate"
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="categorySelect" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Category</label>
+                    <select id="categorySelect"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 outline-none transition">
+                        <option value="">No category</option>
+                        <!-- Options are loaded from the real Categories API -->
+                    </select>
+                </div>
+
+                <div id="formError" class="hidden mb-4 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300 text-sm"></div>
+
+                <div class="flex gap-3">
+                    <button type="submit" id="saveBtn"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition active:scale-[0.98]">
+                        Save Task
+                    </button>
+                    <button type="button" onclick="closeModal()"
+                            class="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-semibold transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>
