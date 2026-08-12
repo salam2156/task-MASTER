@@ -63,7 +63,19 @@ app.get('/api/health', async (req, res) => {
     await db.query('SELECT 1');
     res.json({ ok: true, db: 'up' });
   } catch (err) {
-    res.status(503).json({ ok: false, db: 'down', error: String(err.message) });
+    console.error('Health check DB error:', err);
+    res.status(503).json({
+      ok: false,
+      db: 'down',
+      code: err.code || null,
+      error: String(err.message),
+      config: {
+        host: process.env.DB_HOST || '(unset)',
+        user: process.env.DB_USER || '(unset)',
+        database: process.env.DB_NAME || '(unset)',
+        ssl: String(process.env.DB_SSL)
+      }
+    });
   }
 });
 
