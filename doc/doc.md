@@ -804,7 +804,7 @@ Open:
 http://localhost:3000
 
 ---
-
+///////
 22. Application Workflow
 
 The complete system works as follows:
@@ -838,7 +838,7 @@ The complete system works as follows:
                       FRONTEND
 
 ---
-
+///////
 23. Example: Creating a Task
 
 When the user clicks Add Task:
