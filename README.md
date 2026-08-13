@@ -39,7 +39,7 @@ task-master/
 │   ├── dashboardRoutes.js     # /api/dashboard (statistics)
 │   ├── notificationRoutes.js  # /api/notifications
 │   └── userRoutes.js          # /api/user (profile)
-├── views/                     # login, register, dashboard, profile (server-rendered pages)
+├── views/                     # home, login, register, dashboard, profile (server-rendered pages)
 ├── public/
 │   ├── css/style.css          # Core styling (dark mode, responsive, scrollbars)
 │   ├── js/                    # api.js, auth.js, dashboard.js, main.js

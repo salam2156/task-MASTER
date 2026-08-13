@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster - Manage Your Tasks</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%232563EB'/%3E%3Cpath d='M28 52l16 16 30-34' stroke='white' stroke-width='12' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <script>
+        (function () {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2">
+                <div class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600">
+                    <i class="fas fa-check-double text-white text-sm"></i>
+                </div>
+                <span class="text-lg font-bold text-slate-800 dark:text-slate-100">TaskMaster</span>
+            </a>
+            <nav class="flex items-center gap-2 sm:gap-3">
+                <a href="/login" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Log In</a>
+                <a href="/register" class="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-200 dark:shadow-none">Sign Up Free</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <main class="flex-1">
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 pb-12 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-200 dark:shadow-none mb-6">
+                <i class="fas fa-check-double text-white text-2xl"></i>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Organize your day with<br class="hidden sm:block"> <span class="text-blue-600">TaskMaster</span></h1>
+            <p class="mt-4 text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-base sm:text-lg">
+                Plan, track, and complete your tasks with a modern dashboard — statistics, charts, categories, and smart notifications.
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/register" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-200 dark:shadow-none">Get Started</a>
+                <a href="/login" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Log In</a>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-list-check text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Task Management</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Create, edit, and organize tasks with priorities, statuses, and due dates.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-pie text-emerald-600 dark:text-emerald-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Dashboard & Charts</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Live statistics and progress charts for your productivity at a glance.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-bell text-amber-600 dark:text-amber-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Notifications</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Never miss a deadline — get notified about overdue and urgent tasks.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-tags text-purple-600 dark:text-purple-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Categories</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Group tasks by Work, Study, Personal, and more — your own labels.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center mb-4">
+                        <i class="fas fa-moon text-slate-600 dark:text-slate-200"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Dark Mode</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Switch between light and dark themes — your preference is remembered.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg shadow-slate-200 dark:shadow-slate-950">
+                    <div class="w-11 h-11 rounded-xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-screen text-rose-600 dark:text-rose-400"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-1">Fully Responsive</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">A clean dashboard experience on desktop, tablet, and mobile.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+            <div class="bg-blue-600 rounded-2xl p-8 sm:p-12 text-center text-white">
+                <h2 class="text-2xl sm:text-3xl font-bold">Ready to take control of your tasks?</h2>
+                <p class="mt-3 text-blue-100 max-w-lg mx-auto">Create a free account and start organizing your day in less than a minute.</p>
+                <a href="/register" class="mt-6 inline-block px-8 py-3 rounded-xl font-semibold bg-white text-blue-700 hover:bg-blue-50 transition">Create Free Account</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-slate-400 dark:text-slate-500">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-check-double text-blue-600"></i>
+                <span>TaskMaster</span>
+            </div>
+            <span>Organize. Track. Complete.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

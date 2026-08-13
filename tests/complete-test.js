@@ -222,6 +222,9 @@ function today(offsetDays) {
 
     // ================= PAGES & ASSETS =================
     g('Pages');
+    r = await req('GET', '/');
+    check('Home page 200', r.status === 200);
+    check('Home page branding + CTAs', r.body.includes('TaskMaster') && r.body.includes('/login') && r.body.includes('/register'));
     for (const [name, path, auth] of [['login', '/login', false], ['register', '/register', false], ['dashboard', '/dashboard', true], ['profile', '/profile', true]]) {
         r = await req('GET', path, null, auth ? token : null);
         check(name + ' page 200', r.status === 200);

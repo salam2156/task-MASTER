@@ -52,9 +52,9 @@ app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'profile.html'));
 });
 
-// Root route
+// Root route - Home / landing page
 app.get('/', (req, res) => {
-  res.status(200).send('TaskMaster server is running');
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // Health check: verifies the app and its database connection (Render health check)
