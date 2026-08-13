@@ -15,9 +15,11 @@ let filters = {
 };
 
 // Check if a task is overdue (due date passed and not completed)
+// Parse the date parts as LOCAL midnight so "due today" is never overdue
 function isOverdue(task) {
     if (!task.due_date || task.status === 'completed') return false;
-    const due = new Date(task.due_date);
+    const [year, month, day] = task.due_date.split('-').map(Number);
+    const due = new Date(year, month - 1, day);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return due < today;
@@ -40,10 +42,12 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Format a MySQL/ISO date as DD MMM YYYY
+// Format a MySQL/ISO date as DD MMM YYYY (local date parts, no timezone shift)
 function formatDate(dateString) {
     if (!dateString) return 'No due date';
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return 'No due date';
+    const date = new Date(year, month - 1, day);
     if (isNaN(date.getTime())) return 'No due date';
     return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
