@@ -47,6 +47,7 @@ task-master/
 ├── tests/
 │   └── complete-test.js       # Full end-to-end test suite (92 checks)
 ├── start-mysql.bat            # Windows helper: start MySQL if not running
+├── start-server.bat           # Windows helper: one-command start (MySQL + server)
 └── .env                       # Environment variables (NOT committed)
 ```
 
@@ -74,7 +75,7 @@ All queries use **parameterized statements** (SQL-injection safe). Every user-ow
 ### Prerequisites
 
 - Node.js 18+
-- MySQL 8.x running locally (Windows tip: run `start-mysql.bat`)
+- MySQL 8.x running locally (Windows tip: run `start-server.bat` to start MySQL + the app with one command)
 
 ### Setup
 
@@ -93,7 +94,7 @@ DB_PASSWORD=yourpassword
 DB_NAME=task_manager
 JWT_SECRET=<64+ random hex characters>
 
-# 4. Start the server
+# 4. Start the server (Windows: just run `start-server.bat` — starts MySQL if needed, then the server)
 npm start
 ```
 

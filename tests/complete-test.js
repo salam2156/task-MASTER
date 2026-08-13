@@ -43,6 +43,13 @@ function today(offsetDays) {
 
 (async () => {
     try {
+        const probe = await req('GET', '/');
+        if (probe.status !== 200) throw new Error('bad status ' + probe.status);
+    } catch (e) {
+        console.error('Server not reachable on ' + base + '. Start it first with start-server.bat');
+        process.exit(1);
+    }
+    try {
     const stamp = Date.now();
     const emailA = 'runnera' + stamp + '@test.local';
     const emailB = 'runnerb' + stamp + '@test.local';
