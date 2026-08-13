@@ -140,7 +140,7 @@ Production **must use a cloud-accessible MySQL database** — never local MySQL.
 1. **Provision a cloud MySQL** (Render has no managed MySQL; good options: Aiven free tier, Railway, TiDB Cloud). Note: host, port, user, password, database name.
 2. **Create the schema** on the cloud DB — import [`config/database.sql`](config/database.sql) remotely (it contains `CREATE DATABASE IF NOT EXISTS task_manager`).
 3. **Push to GitHub**, then in [Render.com](https://render.com): **New + → Blueprint** and select the `task-MASTER` repo — `render.yaml` is picked up automatically (build `npm install`, start `node server.js`).
-4. **Provide secrets** in the Render service's **Environment** tab: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` (the blueprint marks them as `sync: false` so you set real values; `PORT` = `10000` is preset).
+4. **Provide secrets** in the Render service's **Environment** tab: `DB_HOST`, `DB_PORT` (if not 3306), `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET` (64+ random hex chars), `DB_SSL=true` for TLS-required providers (Aiven, Railway) — the blueprint marks them as `sync: false` so you set real values; `PORT` = `10000` is preset.
 
 The service deploys and is reachable at `https://task-master.onrender.com`. The free plan sleeps after inactivity — the first request after a pause takes ~30–50s to wake up.
 

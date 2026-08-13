@@ -23,3 +23,5 @@ services:
         sync: false
       - key: DB_SSL
         sync: false
+      - key: JWT_SECRET
+        sync: false
