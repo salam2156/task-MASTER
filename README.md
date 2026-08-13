@@ -144,6 +144,8 @@ Production **must use a cloud-accessible MySQL database** — never local MySQL.
 
 The service deploys and is reachable at `https://task-master.onrender.com`. The free plan sleeps after inactivity — the first request after a pause takes ~30–50s to wake up.
 
+**Automated alternative:** after connecting the repo, set `RENDER_API_KEY`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET` and run `powershell -File deploy-render.ps1` — it creates the service via the Render API (all env vars preset).
+
 ## Security Notes
 
 - `.env` and `node_modules/` are excluded via `.gitignore` — never commit secrets
