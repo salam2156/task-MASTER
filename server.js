@@ -93,9 +93,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-// Unknown page route -> clean 404 (Phase 17)
+// Unknown page route -> custom 404 page (Phase 21 UI polish)
 app.use((req, res) => {
-  res.status(404).send('Page not found');
+  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
 // Test the database connection on startup

@@ -225,7 +225,7 @@ async function markNotificationRead(id) {
         await apiRequest(`/notifications/${id}`, 'PUT');
         await loadNotifications();
     } catch (error) {
-        console.error('Failed to mark notification:', error.message);
+        showToast(error.message, 'error');
     }
 }
 
@@ -337,13 +337,9 @@ async function deleteCategory(id, name) {
         renderCategories();
         updateCategoryFilterOptions();
         applyFilters();
-        errorEl.textContent = `Category "${name}" deleted`;
-        setTimeout(() => errorEl.classList.add('hidden'), 3000);
+        showToast(`Category "${name}" deleted`, 'success');
     } catch (error) {
-        errorEl.classList.remove('text-emerald-600', 'dark:text-emerald-400');
-        errorEl.classList.add('text-red-600', 'dark:text-red-400');
-        errorEl.textContent = error.message;
-        setTimeout(() => errorEl.classList.add('hidden'), 5000);
+        showToast(error.message, 'error');
     }
 }
 
@@ -373,9 +369,9 @@ async function createCategory() {
         await apiRequest('/categories', 'POST', { name });
         input.value = '';
         await loadTasks();
+        showToast(`Category "${name}" created`, 'success');
     } catch (error) {
-        errorEl.textContent = error.message;
-        errorEl.classList.remove('hidden');
+        showToast(error.message, 'error');
     }
 }
 
@@ -488,8 +484,9 @@ async function changeStatus(id, newStatus) {
     try {
         await apiRequest(`/tasks/${id}`, 'PUT', { status: newStatus });
         await loadTasks();
+        showToast('Status updated', 'success');
     } catch (error) {
-        alert(error.message);
+        showToast(error.message, 'error');
     }
 }
 
@@ -497,8 +494,9 @@ async function changePriority(id, newPriority) {
     try {
         await apiRequest(`/tasks/${id}`, 'PUT', { priority: newPriority });
         await loadTasks();
+        showToast('Priority updated', 'success');
     } catch (error) {
-        alert(error.message);
+        showToast(error.message, 'error');
     }
 }
 
@@ -570,6 +568,7 @@ async function saveTask(event) {
         // Success flash (green check) before closing
         saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
         saveBtn.classList.add('bg-emerald-600');
+        showToast(id ? 'Task updated' : 'Task created', 'success');
         setTimeout(() => {
             saveBtn.classList.remove('bg-emerald-600');
             saveBtn.disabled = false;
@@ -592,8 +591,9 @@ async function deleteTask(id) {
     try {
         await apiRequest(`/tasks/${id}`, 'DELETE');
         await loadTasks();
+        showToast('Task deleted', 'success');
     } catch (error) {
-        alert(error.message);
+        showToast(error.message, 'error');
     }
 }
 

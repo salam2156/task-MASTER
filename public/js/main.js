@@ -70,3 +70,26 @@ function showMessage(container, text, isError = true) {
             : 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
     );
 }
+
+// ---------- TOAST NOTIFICATIONS (UI/UX polish) ----------
+
+// Floating success / error toast, auto-dismisses after ~3.5s
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + (type === 'error' ? 'toast-error' : 'toast-success');
+    toast.innerHTML =
+        '<i class="fas ' + (type === 'error' ? 'fa-circle-xmark' : 'fa-circle-check') + '"></i><span></span>';
+    toast.querySelector('span').textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('toast-show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}

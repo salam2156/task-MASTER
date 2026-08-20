@@ -233,8 +233,17 @@ function today(offsetDays) {
         r = await req('GET', asset);
         check(asset + ' served', r.status === 200);
     }
+    r = await req('GET', '/login');
+    check('Login has navbar + footer', r.body.includes('Sign Up Free') && r.body.includes('All rights reserved'));
+    check('Login has real-time validation hints', r.body.includes('emailHint') && r.body.includes('passwordHint'));
+    r = await req('GET', '/register');
+    check('Register has navbar + footer', r.body.includes('Sign Up Free') && r.body.includes('All rights reserved'));
+    check('Register has real-time validation hints', r.body.includes('nameHint') && r.body.includes('emailHint') && r.body.includes('passwordHint'));
     r = await req('GET', '/missing');
     check('Unknown page 404', r.status === 404);
+    check('Custom 404 page rendered', r.body.includes('Back to Home') && r.body.includes('404'));
+    r = await req('GET', '/js/main.js');
+    check('Toast system present', r.body.includes('function showToast'));
 
     // ================= UI STATIC CHECKS =================
     g('UI (static)');

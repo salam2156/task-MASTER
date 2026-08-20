@@ -155,16 +155,6 @@
     <script>
         // TaskMaster - Profile page logic (Phase 13)
 
-        function showBox(el, text, isError) {
-            el.textContent = text;
-            el.classList.remove('hidden');
-            el.classList.remove('border-red-200', 'bg-red-50', 'text-red-700');
-            el.classList.remove('border-emerald-200', 'bg-emerald-50', 'text-emerald-700');
-            el.classList.add(isError
-                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400'
-                : 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400');
-        }
-
         // Guard: not logged in -> login page
         if (!localStorage.getItem('token') || !getCurrentUser()) {
             window.location.href = '/login';
@@ -186,7 +176,7 @@
                 document.getElementById('memberSince').textContent =
                     new Date(profile.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
             } catch (error) {
-                showBox(document.getElementById('profileMessage'), error.message, true);
+                showToast(error.message, 'error');
             }
         }
 
@@ -202,11 +192,10 @@
         // Update profile information
         document.getElementById('profileForm').addEventListener('submit', async (event) => {
             event.preventDefault();
-            const messageBox = document.getElementById('profileMessage');
             const btn = event.target.querySelector('button');
 
             if (!document.getElementById('name').value.trim() || !document.getElementById('email').value.trim()) {
-                showBox(messageBox, 'Name and email are required', true);
+                showToast('Name and email are required', 'error');
                 return;
             }
 
@@ -219,13 +208,13 @@
                     email: document.getElementById('email').value.trim(),
                     avatar: document.getElementById('avatar').value.trim()
                 });
-                showBox(messageBox, data.message, false);
+                showToast(data.message, 'success');
                 // Keep the session in sync (name/avatar in header)
                 const user = getCurrentUser();
                 setSession(localStorage.getItem('token'), { ...user, name: data.user.name, email: data.user.email, avatar: data.user.avatar });
                 document.getElementById('headerAvatar').src = data.user.avatar || '/images/avatar.png';
             } catch (error) {
-                showBox(messageBox, error.message, true);
+                showToast(error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Save Changes';
@@ -235,13 +224,12 @@
         // Change password
         document.getElementById('passwordForm').addEventListener('submit', async (event) => {
             event.preventDefault();
-            const messageBox = document.getElementById('passwordMessage');
             const btn = event.target.querySelector('button');
             const newPass = document.getElementById('newPassword').value;
             const confirmPass = document.getElementById('confirmPassword').value;
 
             if (newPass !== confirmPass) {
-                showBox(messageBox, 'New passwords do not match', true);
+                showToast('New passwords do not match', 'error');
                 return;
             }
 
@@ -253,12 +241,12 @@
                     currentPassword: document.getElementById('currentPassword').value,
                     newPassword: newPass
                 });
-                showBox(messageBox, data.message, false);
+                showToast(data.message, 'success');
                 document.getElementById('currentPassword').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmPassword').value = '';
             } catch (error) {
-                showBox(messageBox, error.message, true);
+                showToast(error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Update Password';
