@@ -3,3 +3,5 @@ node_modules/
 
 # Environment variables (never commit secrets)
 .env
+# Runtime logs
+node-session.log
