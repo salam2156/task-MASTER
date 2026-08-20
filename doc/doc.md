@@ -905,7 +905,7 @@ UI
 - [x] Buttons work. 
 
 ---
-
+/////
 25. Git & GitHub
 
 Initialize the repository:
@@ -931,7 +931,7 @@ git remote add origin YOUR_GITHUB_REPOSITORY
 Push:
 
 git push -u origin main
-
+/////
 ---
 
 26. Deployment — Render
