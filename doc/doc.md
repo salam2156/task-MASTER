@@ -838,7 +838,7 @@ The complete system works as follows:
                       FRONTEND
 
 ---
-///////
+/////// 
 23. Example: Creating a Task
 
 When the user clicks Add Task:
@@ -855,54 +855,54 @@ When the user clicks Add Task:
 10. Frontend updates the dashboard.
 
 ---
-
+/////
 24. Testing
 
 Authentication
 
-- [ ] Registration works.
-- [ ] Login works.
-- [ ] Logout works.
-- [ ] Invalid credentials are handled.
-- [ ] Empty fields are validated.
+- [x] Registration works.
+- [x] Login works.
+- [x] Logout works.
+- [x] Invalid credentials are handled.
+- [x] Empty fields are validated.
 
 Tasks
 
-- [ ] Create task.
-- [ ] View tasks.
-- [ ] Edit task.
-- [ ] Delete task.
-- [ ] Change status.
-- [ ] Change priority.
-- [ ] Set due date.
-- [ ] Search tasks.
-- [ ] Filter tasks.
-- [ ] Detect overdue tasks.
+- [x] Create task.
+- [x] View tasks.
+- [x] Edit task.
+- [x] Delete task.
+- [x] Change status.
+- [x] Change priority.
+- [x] Set due date.
+- [x] Search tasks.
+- [x] Filter tasks.
+- [x] Detect overdue tasks.
 
 Dashboard
 
-- [ ] Statistics are correct.
-- [ ] Charts display correctly.
-- [ ] Notifications work.
-- [ ] Progress percentage is correct.
+- [x] Statistics are correct.
+- [x] Charts display correctly.
+- [x] Notifications work.
+- [x] Progress percentage is correct.
 
 Database
 
-- [ ] MySQL connection works.
-- [ ] Users are stored correctly.
-- [ ] Tasks are stored correctly.
-- [ ] Relationships work.
-- [ ] JOIN queries work.
-- [ ] User data is isolated correctly.
+- [x] MySQL connection works.
+- [x] Users are stored correctly.
+- [x] Tasks are stored correctly.
+- [x] Relationships work.
+- [x] JOIN queries work.
+- [x] User data is isolated correctly.
 
 UI
 
-- [ ] Desktop layout works.
-- [ ] Tablet layout works.
-- [ ] Mobile layout works.
-- [ ] Dark mode works.
-- [ ] Navigation works.
-- [ ] Buttons work.
+- [x] Desktop layout works.
+- [x] Tablet layout works.
+- [x] Mobile layout works.
+- [x] Dark mode works.
+- [x] Navigation works.
+- [x] Buttons work. 
 
 ---
 
