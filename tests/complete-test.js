@@ -257,6 +257,10 @@ function today(offsetDays) {
     r = await req('GET', '/css/style.css');
     check('overflow-x guard', r.body.includes('overflow-x: hidden'));
     check('focus-visible ring', r.body.includes('focus-visible'));
+    check('Toast styles present', r.body.includes('#toastContainer') && r.body.includes('.toast-error'));
+    check('Smooth dark-mode transition', r.body.includes('transition: background-color 0.3s'));
+    r = await req('GET', '/');
+    check('Home footer (quick links + social + copyright)', r.body.includes('Quick Links') && r.body.includes('fa-github') && r.body.includes('All rights reserved'));
 
     // ================= DELETE =================
     g('Delete');
