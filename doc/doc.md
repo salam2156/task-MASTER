@@ -1006,55 +1006,55 @@ The application will then connect to the production database instead of the loca
 
 Frontend
 
-- [ ] Home page.
-- [ ] Login page.
-- [ ] Register page.
-- [ ] Dashboard.
-- [ ] Profile page.
-- [ ] Task management UI.
-- [ ] Search.
-- [ ] Filters.
-- [ ] Notifications.
-- [ ] Charts.
-- [ ] Dark mode.
-- [ ] Responsive design.
+- [x] Home page.
+- [x] Login page.
+- [x] Register page.
+- [x] Dashboard.
+- [x] Profile page.
+- [x] Task management UI.
+- [x] Search.
+- [x] Filters.
+- [x] Notifications.
+- [x] Charts.
+- [x] Dark mode.
+- [x] Responsive design.
 
 Backend
 
-- [ ] Express server.
-- [ ] Authentication.
-- [ ] Authentication middleware.
-- [ ] User routes.
-- [ ] Task routes.
-- [ ] Notification routes.
-- [ ] REST API.
-- [ ] CRUD operations.
-- [ ] Input validation.
-- [ ] Error handling.
+- [x] Express server.
+- [x] Authentication.
+- [x] Authentication middleware.
+- [x] User routes.
+- [x] Task routes.
+- [x] Notification routes.
+- [x] REST API.
+- [x] CRUD operations.
+- [x] Input validation.
+- [x] Error handling.
 
 Database
 
-- [ ] MySQL database.
-- [ ] Users table.
-- [ ] Tasks table.
-- [ ] Categories table.
-- [ ] Notifications table.
-- [ ] Primary keys.
-- [ ] Foreign keys.
-- [ ] Relationships.
-- [ ] SELECT.
-- [ ] INSERT.
-- [ ] UPDATE.
-- [ ] DELETE.
-- [ ] JOIN.
-- [ ] GROUP BY.
+- [x] MySQL database.
+- [x] Users table.
+- [x] Tasks table.
+- [x] Categories table.
+- [x] Notifications table.
+- [x] Primary keys.
+- [x] Foreign keys.
+- [x] Relationships.
+- [x] SELECT.
+- [x] INSERT.
+- [x] UPDATE.
+- [x] DELETE.
+- [x] JOIN.
+- [x] GROUP BY.
 
 Deployment
 
-- [ ] Git repository.
-- [ ] GitHub repository.
-- [ ] ".gitignore".
-- [ ] ".env" excluded.
+- [x] Git repository.
+- [x] GitHub repository.
+- [x] ".gitignore".
+- [x] ".env" excluded.
 - [ ] Render deployment.
 - [ ] Cloud MySQL.
 - [ ] Live URL.
