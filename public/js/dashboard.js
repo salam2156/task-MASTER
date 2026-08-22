@@ -15,11 +15,15 @@ let filters = {
 };
 
 // Check if a task is overdue (due date passed and not completed)
-// Parse the date parts as LOCAL midnight so "due today" is never overdue
+// Accepts "YYYY-MM-DD" and ISO datetime ("YYYY-MM-DDTHH:mm:ssZ");
+// parses date parts as LOCAL midnight so "due today" is never overdue
 function isOverdue(task) {
     if (!task.due_date || task.status === 'completed') return false;
-    const [year, month, day] = task.due_date.split('-').map(Number);
+    const [datePart] = String(task.due_date).split('T');
+    const [year, month, day] = datePart.split('-').map(Number);
+    if (!year || !month || !day) return false;
     const due = new Date(year, month - 1, day);
+    if (isNaN(due.getTime())) return false;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return due < today;

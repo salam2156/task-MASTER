@@ -11,6 +11,9 @@ const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    // Return DATE/DATETIME as plain strings ("YYYY-MM-DD") instead of JS Date objects,
+    // so API responses carry timezone-stable dates the frontend can parse safely
+    dateStrings: true,
     ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
     waitForConnections: true,
     connectionLimit: 10,
